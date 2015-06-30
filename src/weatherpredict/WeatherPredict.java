@@ -24,30 +24,32 @@ public class WeatherPredict {
     int[] PN= {1000, 900, 650, 400, 150};
     private static final int P0=1000;
     
-    float[][][] U_t= new float[X][Y][K];
-    float[][][] U_t1= new float[X][Y][K];
-    float[][][] U_t2= new float[X][Y][K];
-    
-    float[][][] V_t= new float[X][Y][K];
-    float[][][] V_t1= new float[X][Y][K];
-    float[][][] V_t2= new float[X][Y][K];
-    
-    float[][][] TE= new float[X][Y][K];
-    float[][][] TE1= new float[X][Y][K];
-    float[][][] TE2= new float[X][Y][K];
-    
-    float[][][] Q_t= new float[X][Y][K];
-    float[][][] Q_t1= new float[X][Y][K];
-    float[][][] Q_t2= new float[X][Y][K];
-    
-    float[][][] PS= new float[X][Y][K];
-    float[][][] PS1= new float[X][Y][K];
-    float[][][] PS2= new float[X][Y][K];
-    
+//    float[][][] U_t= new float[X][Y][K];
+//    float[][][] U_t1= new float[X][Y][K];
+//    float[][][] U_t2= new float[X][Y][K];
+    float[][][][] U= new float[N][X][Y][K];
+//    float[][][] V_t= new float[X][Y][K];
+//    float[][][] V_t1= new float[X][Y][K];
+//    float[][][] V_t2= new float[X][Y][K];
+    float[][][][] V= new float[N][X][Y][K];
+//    float[][][] TE= new float[X][Y][K];
+//    float[][][] TE1= new float[X][Y][K];
+//    float[][][] TE2= new float[X][Y][K];
+    float[][][][] TE= new float[N][X][Y][K];
+//    float[][][] Q_t= new float[X][Y][K];
+//    float[][][] Q_t1= new float[X][Y][K];
+//    float[][][] Q_t2= new float[X][Y][K];
+    float[][][][] Q= new float[N][X][Y][K];
+//    float[][][] PS= new float[X][Y][K];
+//    float[][][] PS1= new float[X][Y][K];
+//    float[][][] PS2= new float[X][Y][K];
+    float[][][][] PS= new float[N][X][Y][K];
     float[][][] Wt= new float[X][Y][K];
     float[][][] Ws= new float[X][Y][1];
     float[][][] PHI= new float[X][Y][K];
-    
+    public void init(){
+        
+    }
     public static void main(String[] args) {
         // TODO code application logic here
         
