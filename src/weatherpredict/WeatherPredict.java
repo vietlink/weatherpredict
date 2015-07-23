@@ -64,7 +64,23 @@ public class WeatherPredict {
                 //giai doan du doan
                 for (int i=1;i<X-1; i++){
                     for(int j=1; j<Y-1; j++){
-                        if(k==1){
+                        U[n+2][i][j][k]=-M*(PHI[i][j][k]-PHI[i+1][j][k])/del
+                            -M1*((U[n+1][i][j][k]+U[n+1][i+1][j][k])*(U[n+1][i+1][j][k]-U[n+1][i][j][k])+(U[n+1][i][j][k]+U[n+1][i-1][j][k])*(U[n+1][i][j][k]-U[n+1][i-1][j][k]))
+                            +F*(V[n+1][i][j][k]+V[n+1][i][j-1][k]+V[n+1][i+1][j][k]+V[n+1][i+1][j-1][k])/4
+                            -M1*((V[n+1][i][j][k]+V[n+1][i+1][j][k])*(U[n+1][i][j+1][k]-U[n+1][i][j][k])+(V[n+1][i][j-1][k]+V[n+1][i+1][j-1][k])*(U[n+1][i][j-i][k]-U[n+1][i][j][k]));
+                        V[n+2][i][j][k]= -M*(PHI[i][j+1][k]-PHI[i][j][k])/del
+                            - M1*((U[n+1][i][j][k]+U[n+1][i][j+1][k])*(V[n+1][i+1][j][k]-V[n+1][i][j][k])+(U[n+1][i-1][j][k]+U[n+1][i-1][j+1][k])*(V[n+1][i][j][k]-V[n+1][i][j][k]))
+                            - M1*((V[n+1][i][j][k]+V[n+1][i][j+1][k])*(V[n+1][i][j+1][k]-V[n+1][i][j][k])+(V[n+1][i][j][k]+V[n+1][i][j-1][k])*(V[n+1][i][j][k]-V[n+1][i][j-1][k]))
+                            -F*(U[n+1][i][j][k]+U[n+1][i-1][j][k]+U[n+1][i][j+1][k]+V[n+1][i-1][j+1][k])/4;
+                        TE[n+2][i][j][k]=-2*M1*(U[n+1][i+1][j][k]*(TE[n+1][i+1][j][k]-TE[n+1][i][j][k])
+                                -U[n+1][i][j][k]*(TE[n+1][i][j][k]-TE[n+1][i-1][j][k])
+                                +V[n+1][i][j+1][k]*(TE[n+1][i][j+1][k]-TE[n+1][i][j][k])
+                                -V[n+1][i][j][k]*(TE[n+1][i][j][k]-TE[n+1][i][j-1][k]));
+                        Q[n+2][i][j][k]=-2*M1*(U[n+1][i][j][k]*(Q[n+1][i+1][j][k]-Q[n+1][i][j][k])
+                                -U[n+1][i][j][k]*(Q[n+1][i][j][k]-Q[n+1][i-1][j][k])
+                                +V[n-1][i][j+1][k]*(Q[n+1][i][j+1][k]-Q[n+1][i][j][k])
+                                -V[n+1][i][j][k]*(Q[n+1][i][j][k]-Q[n+1][i][j-1][k]));
+                        if(k==0){
                             P1= (PN[k+1]+PN[k])/2;                            
                             P2= (PN[k+2]+PN[k+1])/2;                                                        
                             //**1
@@ -91,7 +107,7 @@ public class WeatherPredict {
                             PS[n+2][i][j]=PS[n+2][i][j]+W9-(M*((U[n+1][i+1][j][k+1]-U[n+1][i][j][k])
                                     +(V[n+1][i][j+1][k+1]-V[n+1][i][j][k+1])+(U[n+1][i+1][j][k]-U[n+1][i][j][k])
                                     +(V[n+1][i][j+1][k]-V[n+1][i][j][k]))/(2*del))*(PS[n+1][i][j]-900);
-                        }else if(k==K){
+                        }else if(k==K-1){
                             //***
                             P1= (PN[k]-PN[k-1])/2;                            
                             P2=25;                            
@@ -113,10 +129,7 @@ public class WeatherPredict {
                         }else{
                         P1= (PN[k-1]+PN[k])/2;
                         P2= (PN[k]+PN[k+1])/2;
-                        U[n+2][i][j][k]=-M*(PHI[i][j][k]-PHI[i+1][j][k])/del
-                            -M1*((U[n+1][i][j][k]+U[n+1][i+1][j][k])*(U[n+1][i+1][j][k]-U[n+1][i][j][k])+(U[n+1][i][j][k]+U[n+1][i-1][j][k])*(U[n+1][i][j][k]-U[n+1][i-1][j][k]))
-                            +F*(V[n+1][i][j][k]+V[n+1][i][j-1][k]+V[n+1][i+1][j][k]+V[n+1][i+1][j-1][k])/4
-                            -M1*((V[n+1][i][j][k]+V[n+1][i+1][j][k])*(U[n+1][i][j+1][k]-U[n+1][i][j][k])+(V[n+1][i][j-1][k]+V[n+1][i+1][j-1][k])*(U[n+1][i][j-i][k]-U[n+1][i][j][k]));
+                        
                         U[n+2][i][j][k]= U[n+2][i][j][k]-(((Wt[i+1][j][k]+Wt[i][j][k])*(PN[k]-P2)
                                 +(Wt[i+1][j][k+1]+Wt[i][j][k+1])*(P1-PN[k]))/(2*(P1-P2))
                                 *((U[n+1][i][j][k-1]-U[n+1][i][j][k])*(PN[k]-PN[k+1])/(PN[k-1]-PN[k]))
@@ -125,10 +138,7 @@ public class WeatherPredict {
 //                            -M1*((U[n][i][j][k]+U[n][i+1][j][k])*(U[n][i+1][j][k]-U[n][i][j][k])+(U[n][i][j][k]+U[n][i-1][j][k])*(U[n][i][j][k]-U[n][i-1][j][k]))
 //                            +F*(V[n][i][j][k]+V[n][i][j-1][k]+V[n][i+1][j][k]+V[n][i+1][j-1][k])/4
 //                            -M1*((V[n][i][j][k]+V[n][i+1][j][k])*(U[n][i][j+1][k]-U[n][i][j][k])+(V[n][i][j-1][k]+V[n][i+1][j-1][k])*(U[n][i][j-i][k]-U[n][i][j][k]));
-                        V[n+2][i][j][k]= -M*(PHI[i][j+1][k]-PHI[i][j][k])/del
-                            - M1*((U[n+1][i][j][k]+U[n+1][i][j+1][k])*(V[n+1][i+1][j][k]-V[n+1][i][j][k])+(U[n+1][i-1][j][k]+U[n+1][i-1][j+1][k])*(V[n+1][i][j][k]-V[n+1][i][j][k]))
-                            - M1*((V[n+1][i][j][k]+V[n+1][i][j+1][k])*(V[n+1][i][j+1][k]-V[n+1][i][j][k])+(V[n+1][i][j][k]+V[n+1][i][j-1][k])*(V[n+1][i][j][k]-V[n+1][i][j-1][k]))
-                            -F*(U[n+1][i][j][k]+U[n+1][i-1][j][k]+U[n+1][i][j+1][k]+V[n+1][i-1][j+1][k])/4;
+                        
                         V[n+2][i][j][k]= V[n+2][i][j][k]-(((Wt[i][j+1][k]+Wt[i][j][k])*(PN[k]-P2)
                                 +(Wt[i][j+1][k+1]+Wt[i][j][k+1])*(P1-PN[k]))/(2*(P1-P2))
                                 *((V[n+1][i][j][k-1]-V[n+1][i][j][k+1])*(PN[k]-PN[k+1])/(PN[k-1]-PN[k]))
@@ -138,20 +148,14 @@ public class WeatherPredict {
 //                            - M1*((U[n][i][j][k]+U[n][i][j+1][k])*(V[n][i+1][j][k]-V[n][i][j][k])+(U[n][i-1][j][k]+U[n][i-1][j+1][k])*(V[n][i][j][k]-V[n][i][j][k]))
 //                            - M1*((V[n][i][j][k]+V[n][i][j+1][k])*(V[n][i][j+1][k]-V[n][i][j][k])+(V[n][i][j][k]+V[n][i][j-1][k])*(V[n][i][j][k]-V[n][i][j-1][k]))
 //                            -F*(U[n][i][j][k]+U[n][i-1][j][k]+U[n][i][j+1][k]+V[n][i-1][j+1][k])/4;
-                        TE[n+2][i][j][k]=-2*M1*(U[n+1][i+1][j][k]*(TE[n+1][i+1][j][k]-TE[n+1][i][j][k])
-                                -U[n+1][i][j][k]*(TE[n+1][i][j][k]-TE[n+1][i-1][j][k])
-                                +V[n+1][i][j+1][k]*(TE[n+1][i][j+1][k]-TE[n+1][i][j][k])
-                                -V[n+1][i][j][k]*(TE[n+1][i][j][k]-TE[n+1][i][j-1][k]));
+                        
                         TE[n+2][i][j][k]=TE[n+2][i][j][k]-Wt[i][j][k]*((TE[n+1][i][j][k-1]-TE[n+1][i][j][k])
                                 *(PN[k]-PN[k+1])/(PN[k-1]-PN[k])+(TE[n+1][i][j][k]-TE[n][i][j][k+1])*(PN[k-1]-PN[k])/(PN[k]-PN[k+1]))/(PN[k-1]-PN[k+1]);
 //                        TE[n+1][i][j][k]=-2*M1*(U[n][i+1][j][k]*(TE[n][i+1][j][k]-TE[n][i][j][k])
 //                                -U[n][i][j][k]*(TE[n][i][j][k]-TE[n][i-1][j][k])
 //                                +V[n][i][j+1][k]*(TE[n][i][j+1][k]-TE[n][i][j][k])
 //                                -V[n][i][j][k]*(TE[n][i][j][k]-TE[n][i][j-1][k]));
-                        Q[n+2][i][j][k]=-2*M1*(U[n+1][i][j][k]*(Q[n+1][i+1][j][k]-Q[n+1][i][j][k])
-                                -U[n+1][i][j][k]*(Q[n+1][i][j][k]-Q[n+1][i-1][j][k])
-                                +V[n-1][i][j+1][k]*(Q[n+1][i][j+1][k]-Q[n+1][i][j][k])
-                                -V[n+1][i][j][k]*(Q[n+1][i][j][k]-Q[n+1][i][j-1][k]));
+                        
                         Q[n+2][i][j][k]= Q[n+2][i][j][k]-Wt[i][j][k]*((Q[n+1][i][j][k-1]-Q[n+1][i][j][k])*
                                 (PN[k]-PN[k+1])/(PN[k-1]-PN[k])+(Q[n+1][i][j][k]-Q[n+1][i][j][k+1])*
                                 (PN[k-1]-PN[k])/(PN[k]-PN[k+1]))/(PN[k-1]-PN[k+1]);
@@ -167,7 +171,7 @@ public class WeatherPredict {
                     for(int j=1; j<Y-1; j++){
                         R0= (float) (TE[n+1][i][j][k]*Math.pow(PN[k]/P0, RC));
                         TV=(float) (TE[n+1][i][j][k]*(1+0.61*Q[n+1][i][j][k]));
-                        if(k==1){
+                        if(k==0){
                             P1=(PN[k]-PN[k+1])/2;
                             P2=(PN[k+1]-PN[k+2])/2;
                             P3=(PN[k+1]+PN[k+2])/2;
@@ -184,7 +188,7 @@ public class WeatherPredict {
                                     -(Wt[i][j][k+1]*((PN[k]-PN[k+1])/(PN[k+1]-P3))))/((PN[k+1]-P3)/(PN[k]-PN[k+1])-(PN[k]-PN[k+1])/(PN[k+1]-P3));
                             //**2
                             PHI[i][j][k]=(float) (PHI[i][j][k+1]+R/R0*TV*Math.pow((PN[k]/P0), RC)*(PN[k+1]-PN[k]));
-                        } else if (k==K){
+                        } else if (k==K-1){
                             //***1
                             PHI[i][j][k]= (float) (PHI[i][j][k-1]+R/R0*TV*Math.pow(PN[k]/P0, RC)*(PN[k]-PN[k-1]));
                             Wt[i][j][k]=0;
