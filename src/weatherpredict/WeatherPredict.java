@@ -20,11 +20,11 @@ public class WeatherPredict {
     private static final int X=50;
     private static final int Y=40;
     private static final int K=5;
-    private static final int R=287;
-    private static final int CP=1005;
-    private static final int M=1;
-    private static final int N=50;
-    private static final int[] PN= {1000, 900, 650, 400, 150};
+    private static final float R=287;
+    private static final float CP=1005;
+    private static final float M=1;
+    private static final float N=50;
+    private static final float[] PN= {1000, 900, 650, 400, 150};
     private static final int P0=1000;
     private static final float det=1200;
     private static final float dex=100000;
@@ -89,7 +89,7 @@ public class WeatherPredict {
                         -M1*((Vt1[i][j][k]+Vt1[i+1][j][k])*(Ut1[i][j+1][k]-Ut1[i][j][k])+(Vt1[i][j-1][k]+Vt1[i+1][j-1][k])*(Ut1[i][j-i][k]-Ut1[i][j][k]));
                     //2.2
                     Vt2[i][j][k]= -M*(PHI[i][j+1][k]-PHI[i][j][k])/dex
-                        - M1*((Ut1[i][j][k]+Ut1[i][j+1][k])*(Vt1[i+1][j][k]-Vt1[i][j][k])+(Ut1[i-1][j][k]+Ut1[i-1][j+1][k])*(Vt1[i][j][k]-Vt1[i][j][k]))
+                        - M1*((Ut1[i][j][k]+Ut1[i][j+1][k])*(Vt1[i+1][j][k]-Vt1[i][j][k])+(Ut1[i-1][j][k]+Ut1[i-1][j+1][k])*(Vt1[i][j][k]-Vt1[i-1][j][k]))
                         - M1*((Vt1[i][j][k]+Vt1[i][j+1][k])*(Vt1[i][j+1][k]-Vt1[i][j][k])+(Vt1[i][j][k]+Vt1[i][j-1][k])*(Vt1[i][j][k]-Vt1[i][j-1][k]))
                         -F*(Ut1[i][j][k]+Ut1[i-1][j][k]+Ut1[i][j+1][k]+Vt1[i-1][j+1][k])/4;
                     U1= (Ut1[i+1][j][k]+Ut1[i+1][j][k+1])/2;
