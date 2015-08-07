@@ -5,14 +5,24 @@
  */
 package weatherpredict;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+
 /**
  *
  * @author ngo
  */
 public class test {
-    public static void main(String[] args) {
-        float a= (float) 4.5;
-        double b= 2.2;
-        System.out.println(Math.pow(a, b));
+    public static void main(String[] args) throws FileNotFoundException {
+        File f= new File("H:\\git\\PythonTut\\PythonTut\\src\\test\\test1.txt");
+        Scanner s= new Scanner(f);
+        int[] a= new int[5];
+        for (int i = 0; i < a.length; i++) {
+            a[i]=s.nextInt();
+        }
+        for (int b : a) {
+            System.out.println(b);
+        }
     }
 }
