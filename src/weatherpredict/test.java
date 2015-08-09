@@ -15,14 +15,7 @@ import java.util.Scanner;
  */
 public class test {
     public static void main(String[] args) throws FileNotFoundException {
-        File f= new File("H:\\git\\PythonTut\\PythonTut\\src\\test\\test1.txt");
-        Scanner s= new Scanner(f);
-        int[] a= new int[5];
-        for (int i = 0; i < a.length; i++) {
-            a[i]=s.nextInt();
-        }
-        for (int b : a) {
-            System.out.println(b);
-        }
-    }
+        System.out.println(Math.pow(1000/25, 0.286));
+        System.out.println(WeatherPredict.roundValue(5*Math.cos(Math.PI/12), 3));
+    }    
 }
