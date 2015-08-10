@@ -7,6 +7,7 @@ package weatherpredict;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.text.DecimalFormat;
 import java.util.Scanner;
 
 /**
@@ -15,7 +16,10 @@ import java.util.Scanner;
  */
 public class test {
     public static void main(String[] args) throws FileNotFoundException {
-        System.out.println(Math.pow(1000/25, 0.286));
-        System.out.println(WeatherPredict.roundValue(5*Math.cos(Math.PI/12), 3));
+        DecimalFormat df= new DecimalFormat("#0.###");
+        float  a= 1.000000443245f;
+//        a= WeatherPredict.roundValue((float) a, 6);
+        df.format(a);
+        System.out.println(a);
     }    
 }
