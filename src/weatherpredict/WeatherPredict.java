@@ -11,6 +11,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
+import java.math.BigDecimal;
 import java.util.Scanner;
 
 /**
@@ -25,60 +26,61 @@ public class WeatherPredict {
     private static final int X=50;
     private static final int Y=40;
     private static final int K=5;
-    private static final float R=287;
-    private static final float CP=1005;
-    private static final float M=1;
-    private static final float N=50;
-    private static final float[] PN= {150, 400, 650, 900, 1000};
+    private static final int N=4;
+    private static final double R=287;
+    private static final double CP=1005;
+    private static final double M=1;
+    
+    private static final double[] PN= {150, 400, 650, 900, 1000};
     private static final int P0=1000;
-    private static final float det=1200;
-    private static final float dex=100000;
-    private static final float F=(float) (14.584*Math.pow(10, -5));    
+    private static final double det=1200;
+    private static final double dex=100000;
+    private static final double F=(double) (14.584*Math.pow(10, -5));    
     private static final int NO_OF_DECIMAL=3;
     
-    static float[][][] Ut= new float[K][X][Y];
-    static float[][][] Ut1= new float[K][X][Y];
-    static float[][][] Ut2= new float[K][X][Y];
+    static double[][][] Ut= new double[K][X][Y];
+    static double[][][] Ut1= new double[K][X][Y];
+    static double[][][] Ut2= new double[K][X][Y];
     
-    static float[][][] Vt= new float[K][X][Y];
-    static float[][][] Vt1= new float[K][X][Y];
-    static float[][][] Vt2= new float[K][X][Y];
+    static double[][][] Vt= new double[K][X][Y];
+    static double[][][] Vt1= new double[K][X][Y];
+    static double[][][] Vt2= new double[K][X][Y];
     
-    static float[][][] TE_t= new float[K][X][Y];
-    static float[][][] TE_t1= new float[K][X][Y];
-    static float[][][] TE_t2= new float[K][X][Y];
-    static float[][][] Q_t= new float[K][X][Y];
-    static float[][][] Q_t1= new float[K][X][Y];
-    static float[][][] Q_t2= new float[K][X][Y];
-    static float[][][] PHI= new float[K][X][Y];
-    static float[][][] Wt= new float[K][X][Y];
-    static float[][] PS= new float[X][Y];
-    static float[][] PS_t1= new float[X][Y];
-    static float[][] PS_t2= new float[X][Y];    
-    static float[][] Ws= new float[X][Y];    
-    static float fPi=(float) Math.PI;
-    static float[] t= {18, 8, -41, -87, -233};
-    static float[] Goc= {fPi/12, fPi/3, 2*fPi/3, 8*fPi/9, 35*fPi/36};
-    static float[] Gio= {5f, 10.8f, 18f, 20.2f, 19.1f};
-    static float[] Zcao= {110, 980, 4940, 7880, 14000};
-    static float P1, P2, P3, P4, P5; 
-    static float U1, U2, V1, V2;
-    static float W1, W2, W9;
-    static float R0,Ro, TV,V_TB;
-    static float M1= M/(4*dex);
-    static float RC= R/CP;
+    static double[][][] TE_t= new double[K][X][Y];
+    static double[][][] TE_t1= new double[K][X][Y];
+    static double[][][] TE_t2= new double[K][X][Y];
+    static double[][][] Q_t= new double[K][X][Y];
+    static double[][][] Q_t1= new double[K][X][Y];
+    static double[][][] Q_t2= new double[K][X][Y];
+    static double[][][] PHI= new double[K][X][Y];
+    static double[][][] Wt= new double[K][X][Y];
+    static double[][] PS= new double[X][Y];
+    static double[][] PS_t1= new double[X][Y];
+    static double[][] PS_t2= new double[X][Y];    
+    static double[][] Ws= new double[X][Y];    
+    static double fPi=(double) Math.PI;
+    static double[] t= {18, 8, -41, -87, -233};
+    static double[] Goc= {fPi/12, fPi/3, 2*fPi/3, 8*fPi/9, 35*fPi/36};
+    static double[] Gio= {5f, 10.8f, 18f, 20.2f, 19.1f};
+    static double[] Zcao= {110, 980, 4940, 7880, 14000};
+    static double P1, P2, P3, P4, P5; 
+    static double U1, U2, V1, V2;
+    static double W1, W2, W9;
+    static double R0,Ro, TV,V_TB;
+    static double M1= M/(4*dex);
+    static double RC= R/CP;
         
-    static float det1;
+    static double det1;
     static Scanner scanner;   
     
     static String dataPath="C:\\Users\\v11424\\Desktop\\";
     public static void init(){
-        float sgoc, cgoc, Tt, Ptb;
+        double sgoc, cgoc, Tt, Ptb;
         System.out.println("Khoi tao so lieu");
         for (int k = 0; k < K; k++) {
-            sgoc=(float) Math.sin(Goc[k]);
+            sgoc=(double) Math.sin(Goc[k]);
             roundValue(sgoc, NO_OF_DECIMAL);
-            cgoc=(float) Math.cos(Goc[k]);
+            cgoc=(double) Math.cos(Goc[k]);
             roundValue(cgoc, NO_OF_DECIMAL);
             Tt= 273+t[k];
             if(k==(K-1)) Ptb=25;
@@ -89,7 +91,7 @@ public class WeatherPredict {
                     Ut[k][i][j]=roundValue(Ut[k][i][j], NO_OF_DECIMAL);
                     Vt[k][i][j]= Gio[k]*sgoc;
                     Vt[k][i][j]=roundValue(Vt[k][i][j], NO_OF_DECIMAL);
-                    TE_t[k][i][j]= (float) (Tt*Math.pow(1000/Ptb, 0.286));
+                    TE_t[k][i][j]= (double) (Tt*Math.pow(1000/Ptb, 0.286));
                     TE_t[k][i][j]=roundValue(TE_t[k][i][j], NO_OF_DECIMAL);
                     Q_t[k][i][j]= 0;
                     PHI[k][i][j]=Zcao[k];
@@ -108,14 +110,14 @@ public class WeatherPredict {
                 PS_t1[i][j]=PS[i][j];
             }
         }
-        saveFile3D("init\\Ut.txt", Ut);
-        saveFile3D("init\\Vt.txt", Vt);
-        saveFile3D("init\\TE_t.txt", TE_t);
-        saveFile3D("init\\Q_t.txt", Q_t);
-        saveFile3D("init\\PHI.txt", PHI);
-        saveFile3D("init\\Wt.txt", Wt);
-        saveFile2D("init\\Ws.txt", Ws);
-        saveFile2D("init\\Ps.txt", PS);
+        saveFile3D("init\\Ut_.txt", Ut);
+        saveFile3D("init\\Vt_.txt", Vt);
+        saveFile3D("init\\TE_t_.txt", TE_t);
+        saveFile3D("init\\Q_t_.txt", Q_t);
+        saveFile3D("init\\PHI_.txt", PHI);
+        saveFile3D("init\\Wt_.txt", Wt);
+        saveFile2D("init\\Ws_.txt", Ws);
+        saveFile2D("init\\Ps_.txt", PS);
         System.out.println("Khoi tao thanh cong");
     }
       
@@ -269,9 +271,9 @@ public class WeatherPredict {
         for(int k=0; k<K; k++){
             for (int i=1; i<X-1; i++){
                 for(int j=1; j<Y-1; j++){
-                    R0= (float) (TE_t1[k][i][j]*Math.pow(PN[k]/P0, RC));
+                    R0= (double) (TE_t1[k][i][j]*Math.pow(PN[k]/P0, RC));
                     Ro= PN[k]/(R*R0);
-                    TV=(float) (TE_t1[k][i][j]*(1+0.61*Q_t1[k][i][j]));
+                    TV=(double) (TE_t1[k][i][j]*(1+0.61*Q_t1[k][i][j]));
                     if(k==0){
                         P1=(PN[k]-PN[k+1])/2;
                         P2=(PN[k+1]-PN[k+2])/2;
@@ -282,26 +284,26 @@ public class WeatherPredict {
                             +((Ut1[k+1][i+1][j]-Ut1[k+1][i][j])
                             +(Vt1[k+1][i][j+1]-Vt1[k+1][i][j]))*P1)/(dex*(P1+P2));          
                         V_TB=roundValue(V_TB, NO_OF_DECIMAL);
-                        float PA3= PN[k+1]-P3;
-                        float PA2= PN[k]-PN[k+1];
-                        float PA1=PN[k]-P3;                        
+                        double PA3= PN[k+1]-P3;
+                        double PA2= PN[k]-PN[k+1];
+                        double PA1=PN[k]-P3;                        
                         //**1
                         Wt[k][i][j]=(-V_TB*PA1+(Ws[i][j]*PA3/PA2-Wt[k+1][i][j]*PA2/PA3))/(PA3/PA2-PA2/PA3);
                         Wt[k][i][j]=roundValue(Wt[k][i][j], NO_OF_DECIMAL);
                         //**2
-                        PHI[k][i][j]=(float) (PHI[k+1][i][j]+R/Ro*TV*Math.pow((PN[k]/P0), RC)*(-PA2));
+                        PHI[k][i][j]=(double) (PHI[k+1][i][j]+R/Ro*TV*Math.pow((PN[k]/P0), RC)*(-PA2));
                         PHI[k][i][j]=roundValue(PHI[k][i][j], NO_OF_DECIMAL);
                     } else if (k==K-1){
-                        float PA0= PN[k]-PN[k-1];
+                        double PA0= PN[k]-PN[k-1];
                         //***1
-                        PHI[k][i][j]=(float) (PHI[k-1][i][j]+R/Ro*TV*Math.pow(PN[k]/P0, RC)*PA0);
+                        PHI[k][i][j]=(double) (PHI[k-1][i][j]+R/Ro*TV*Math.pow(PN[k]/P0, RC)*PA0);
                         PHI[k][i][j]=roundValue(PHI[k][i][j], NO_OF_DECIMAL);
                         Wt[k][i][j]=0;
                     }else{
-                        float PP1= PN[k-1]-PN[k+1];
-                        float PP2= PN[k-1]-PN[k];
-                        float PP3= PN[k]-PN[k+1];
-                        PHI[k][i][j]=(float) (((R/Ro*TV*Math.pow(PN[k]/P0, RC)*PP1+PHI[k-1][i][j]*PP3/PP2
+                        double PP1= PN[k-1]-PN[k+1];
+                        double PP2= PN[k-1]-PN[k];
+                        double PP3= PN[k]-PN[k+1];
+                        PHI[k][i][j]=(double) (((R/Ro*TV*Math.pow(PN[k]/P0, RC)*PP1+PHI[k-1][i][j]*PP3/PP2
                                 -PHI[k+1][i][j]*PP2/PP3))/(PP3/PP2-PP2/PP3));
                         PHI[k][i][j]=roundValue(PHI[k][i][j], NO_OF_DECIMAL);
                         V_TB=-M*((Ut1[k][i+1][j]-Ut1[k][i][j])
@@ -319,7 +321,7 @@ public class WeatherPredict {
         P4=(PN[1]+PN[2])/2;
         for (int i = 1; i < X-1; i++) {
             for (int j = 1; j < Y-1; j++) {
-                float VTS= M*((Ut1[1][i+1][j]-Ut1[1][i][j])+(Vt1[1][i][j+1]-Vt1[1][i][j]))/dex;
+                double VTS= M*((Ut1[1][i+1][j]-Ut1[1][i][j])+(Vt1[1][i][j+1]-Vt1[1][i][j]))/dex;
                 VTS=roundValue(VTS, NO_OF_DECIMAL);
                 Ws[i][j]=Wt[1][i][j]+VTS*(P4- PN[1]);
                 Ws[i][j]=roundValue(Ws[i][j], NO_OF_DECIMAL);
@@ -327,33 +329,33 @@ public class WeatherPredict {
         }
     }
     public static void printResult(){   
-        System.out.println("U=");
+        System.err.println("U=");
         print3D(K, X, Y, Ut2);
-        saveFile3D("temp\\Ut2.txt", Ut2);
-        System.out.println("V=");
-        saveFile3D("temp\\Vt2.txt", Vt2);
+        saveFile3D("temp\\Ut2_"+N+".txt", Ut2);
+        System.err.println("V=");
+        saveFile3D("temp\\Vt2_"+N+".txt", Vt2);
         print3D(K, X, Y, Vt2);
-        System.out.println("TE=");
-        saveFile3D("temp\\TE_t2.txt", TE_t2);
+        System.err.println("TE=");
+        saveFile3D("temp\\TE_t2_"+N+".txt", TE_t2);
         print3D(K, X, Y, TE_t2);
-        System.out.println("Q=");
-        saveFile3D("temp\\Q_t2.txt", Q_t2);
+        System.err.println("Q=");
+        saveFile3D("temp\\Q_t2_"+N+".txt", Q_t2);
         print3D(K, X, Y, Q_t2);
-        System.out.println("Wt=");
-        saveFile3D("temp\\Wt.txt", Wt);
+        System.err.println("Wt=");
+        saveFile3D("temp\\Wt_"+N+".txt", Wt);
         print3D(K, X, Y, Wt);
-        System.out.println("PHI=");
-        saveFile3D("temp\\PHI.txt", PHI);
+        System.err.println("PHI=");
+        saveFile3D("temp\\PHI_"+N+".txt", PHI);
         print3D(K, X, Y, PHI);
         
-        System.out.println("PS=");
+        System.err.println("PS=");
         print2D(X, Y, PS_t2);
-        saveFile2D("temp\\PS_t2.txt", PS_t2);
-        System.out.println("Ws=");
-        saveFile2D("temp\\Ws.txt", Ws);
+        saveFile2D("temp\\PS_t2_"+N+".txt", PS_t2);
+        System.err.println("Ws=");
+        saveFile2D("temp\\Ws_"+N+".txt", Ws);
         print2D(X, Y, Ws);        
     }
-    public static void saveFile3D(String fileName,float[][][] array ){
+    public static void saveFile3D(String fileName,double[][][] array ){
         try {            
             BufferedWriter bw= null;
             File file= new File(dataPath+fileName);
@@ -378,7 +380,7 @@ public class WeatherPredict {
         } catch (Exception e) {
         }
     }
-     public static void saveFile2D(String fileName,float[][] array ){
+     public static void saveFile2D(String fileName,double[][] array ){
         try {            
             BufferedWriter bw= null;
             File file= new File(dataPath+fileName);
@@ -398,17 +400,17 @@ public class WeatherPredict {
         } catch (Exception e) {
         }
     }
-    public static void print3D(int k, int i, int j, float[][][] array){
+    public static void print3D(int k, int i, int j, double[][][] array){
         for (int l = 0; l < k; l++) {
             System.out.println("k= "+(l+1));
             print2D(i, j, array[l]);
         }
     }
-    public static void print2D(int i, int j, float[][] array){
+    public static void print2D(int i, int j, double[][] array){
         for (int k = 0; k < i; k++) {
             for (int l = 0; l < j; l++) {
 //                System.out.println((k+1)+"\t"+(l+1)+"\t"+array[k][l]);
-                System.out.print(array[k][l]+" ");
+                System.out.print(BigDecimal.valueOf(array[k][l])+" ");
             }
             System.out.println();
         }
@@ -416,8 +418,8 @@ public class WeatherPredict {
     public static void saveResult(){
         
     }
-    public static float roundValue(float value, int n){
-        float decimal_place= (float) Math.pow(10, n);
+    public static double roundValue(double value, int n){
+        double decimal_place= (double) Math.pow(10, n);
         return Math.round(value*decimal_place)/decimal_place;
     }
     public static void main(String[] args) {
@@ -425,10 +427,8 @@ public class WeatherPredict {
        
         System.out.println("CHUONG TRINH DU BAO VA CHUAN DOAN THOI TIET");
         System.out.println("-------------------------------------------");
-        init();
-        for(int n=0; n<N; n++){
-            det1=2*det;
-            if (n==0) det1=det;
+        init();        
+        for(int n=0; n<N; n++){            
             //giai doan du doan
             DuDoan();
             System.out.println("Ket thuc viec du bao");
