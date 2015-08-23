@@ -155,7 +155,7 @@ public class WeatherPredict {
     }
     public static void createFolder(){
         for (int i = 0; i < N; i++) {
-            new File(dataPath+"tinhtoan\\"+(i+1)).mkdir();            
+            new File(dataPath+"tinhtoan\\"+(i)).mkdir();            
             }
     }
     public static void DuDoan(){       
@@ -165,14 +165,14 @@ public class WeatherPredict {
                     //2.1                    
                     Ut2[k][i][j]=-M*(PHI[k][i+1][j]-PHI[k][i][j])/dex
                         -M1*((Ut1[k][i][j]+Ut1[k][i+1][j])*(Ut1[k][i+1][j]-Ut1[k][i][j])+(Ut1[k][i][j]+Ut1[k][i-1][j])*(Ut1[k][i][j]-Ut1[k][i-1][j]))
-                        +F*(Vt1[k][i][j]+Vt1[k][i][j+1]+Vt1[k][i-1][j]+Vt1[k][i-1][j+1])/4
+                        +F*(Vt1[k][i][j]+Vt1[k][i+1][j]+Vt1[k][i+1][j-1]+Vt1[k][i][j-1])/4
                         -M1*((Vt1[k][i][j]+Vt1[k][i+1][j])*(Ut1[k][i][j+1]-Ut1[k][i][j])+(Vt1[k][i][j-1]+Vt1[k][i+1][j-1])*(Ut1[k][i][j-1]-Ut1[k][i][j]));  
 //                    Ut2[k][i][j]=roundValue(Ut2[k][i][j], NO_OF_DECIMAL);
                     //2.2
                     Vt2[k][i][j]= -M*(PHI[k][i][j+1]-PHI[k][i][j])/dex
                         - M1*((Ut1[k][i][j]+Ut1[k][i][j+1])*(Vt1[k][i+1][j]-Vt1[k][i][j])+(Ut1[k][i-1][j]+Ut1[k][i-1][j+1])*(Vt1[k][i][j]-Vt1[k][i-1][j]))
                         - M1*((Vt1[k][i][j]+Vt1[k][i][j+1])*(Vt1[k][i][j+1]-Vt1[k][i][j])+(Vt1[k][i][j]+Vt1[k][i][j-1])*(Vt1[k][i][j]-Vt1[k][i][j-1]))
-                        -F*(Ut1[k][i][j]+Ut1[k][i][j+1]+Ut1[k][i][j-1]+Vt1[k][i+1][j-1])/4;      
+                        -F*(Ut1[k][i][j]+Ut1[k][i][j+1]+Ut1[k][i-1][j+1]+Ut1[k][i-1][j])/4;      
 //                    Vt2[k][i][j]=roundValue(Vt2[k][i][j], NO_OF_DECIMAL);
                     if(k==K-1){
                         //***
@@ -227,7 +227,7 @@ public class WeatherPredict {
                         //**1
                         Ut2[k][i][j]=Ut2[k][i][j]-W1*(Ut1[k+1][i][j]-Ut1[k][i][j])/(PN[k+1]-PN[k]);
 //                        Ut2[k][i][j]=roundValue(Ut2[k][i][j], NO_OF_DECIMAL);
-                        System.err.println("Ut2["+k+"]["+i+"]["+j+"]= "+Ut2[k][i][j]);
+//                        System.err.println("Ut2["+k+"]["+i+"]["+j+"]= "+Ut2[k][i][j]);
                         //**2
                         Vt2[k][i][j]=Vt2[k][i][j]-W2*(Vt1[k+1][i][j]-Vt1[k][i][j])/(PN[k+1]-PN[k]);
 //                        System.err.println("Vt2["+k+"]["+i+"]["+j+"]= "+Vt2[k][i][j]);
@@ -241,14 +241,14 @@ public class WeatherPredict {
 //                        System.err.println("Q_t2["+k+"]["+i+"]["+j+"]= "+Q_t2[k][i][j]);
 //                        Q_t2[k][i][j]= roundValue(Q_t2[k][i][j], NO_OF_DECIMAL);
                         //**5
-                        PS_t2[i][j]=-2*M1*(Ut1[k][i+1][j]*(PS_t1[i+1][j]-PS_t1[i][j])
-                                -Ut1[k][i][j]*(PS_t1[i][j]-PS_t1[i-1][j])
+                        PS_t2[i][j]=-2*M1*(Ut1[k][i][j]*(PS_t1[i+1][j]-PS_t1[i][j])
+                                -Ut1[k][i-1][j]*(PS_t1[i][j]-PS_t1[i-1][j])
                                 +Vt1[k][i][j+1]*(PS_t1[i][j+1]-PS_t1[i][j])
-                                -Vt1[k][i][j]*(PS_t1[i][j]-PS_t1[i][j-1]));
+                                -Vt1[k][i][j-1]*(PS_t1[i][j]-PS_t1[i][j-1]));
 //                        PS_t2[i][j]=roundValue(PS_t2[i][j], NO_OF_DECIMAL);
-                        PS_t2[i][j]=PS_t2[i][j]+W9-(((Ut1[k+1][i+1][j]-Ut1[k+1][i][j])
-                                +(Vt1[k+1][i][j+1]-Vt1[k+1][i][j])+(Ut1[k][i+1][j]-Ut1[k][i][j])
-                                +(Vt1[k][i][j+1]-Vt1[k][i][j]))*2*M1)*(PS_t1[i][j]-900);
+                        PS_t2[i][j]=PS_t2[i][j]+W9-(((Ut1[k+1][i][j]-Ut1[k+1][i-1][j])
+                                +(Vt1[k+1][i][j-1]-Vt1[k+1][i][j])+(Ut1[k][i-1][j]-Ut1[k][i][j])
+                                +(Vt1[k][i][j-1]-Vt1[k][i][j]))*2*M1)*(PS_t1[i][j]-900);
 //                        PS_t2[i][j]=roundValue(PS_t2[i][j], NO_OF_DECIMAL);
 //                       System.err.println("PS_t2["+i+"]["+j+"]= "+PS_t2[i][j]);
                         } else{                    
@@ -310,6 +310,9 @@ public class WeatherPredict {
     
     public static void ChuanDoan(){
         for(int k=0; k<K; k++){
+            float PA3= PN[k+1]-P3;
+            float PA2= PN[k]-PN[k+1];
+            float PA1=PN[k]-P3;  
             for (int i=1; i<X-1; i++){
                 for(int j=1; j<Y-1; j++){
                     R0= (float) (TE_t1[k][i][j]*Math.pow(PN[k]/P0, RC));
@@ -324,20 +327,19 @@ public class WeatherPredict {
                             +(Vt1[k][i][j+1]-Vt1[k][i][j]))*P2     
                             +((Ut1[k+1][i+1][j]-Ut1[k+1][i][j])
                             +(Vt1[k+1][i][j+1]-Vt1[k+1][i][j]))*P1)/(dex*(P1+P2));          
-//                        V_TB=roundValue(V_TB, NO_OF_DECIMAL);
-                        float PA3= PN[k+1]-P3;
-                        float PA2= PN[k]-PN[k+1];
-                        float PA1=PN[k]-P3;                        
+//                        V_TB=roundValue(V_TB, NO_OF_DECIMAL);                                              
                         //**1
                         Wt[k][i][j]=(-V_TB*PA1+(Ws[i][j]*PA3/PA2-Wt[k+1][i][j]*PA2/PA3))/(PA3/PA2-PA2/PA3);
 //                        Wt[k][i][j]=roundValue(Wt[k][i][j], NO_OF_DECIMAL);
                         //**2
                         PHI[k][i][j]=(float) (PHI[k+1][i][j]+R/Ro*TV*Math.pow((PN[k]/P0), RC)*(-PA2));
+                        System.err.println("PHI["+k+"]["+i+"]["+j+"]= "+PHI[k][i][j]);
 //                        PHI[k][i][j]=roundValue(PHI[k][i][j], NO_OF_DECIMAL);
                     } else if (k==K-1){
                         float PA0= PN[k]-PN[k-1];
                         //***1
                         PHI[k][i][j]=(float) (PHI[k-1][i][j]+R/Ro*TV*Math.pow(PN[k]/P0, RC)*PA0);
+                        System.err.println("PHI["+k+"]["+i+"]["+j+"]= "+PHI[k][i][j]);
 //                        PHI[k][i][j]=roundValue(PHI[k][i][j], NO_OF_DECIMAL);
                         Wt[k][i][j]=0;
                     }else{
@@ -346,6 +348,7 @@ public class WeatherPredict {
                         float PP3= PN[k]-PN[k+1];
                         PHI[k][i][j]=(float) (((R/Ro*TV*Math.pow(PN[k]/P0, RC)*PP1+PHI[k-1][i][j]*PP3/PP2
                                 -PHI[k+1][i][j]*PP2/PP3))/(PP3/PP2-PP2/PP3));
+                        System.err.println("PHI["+k+"]["+i+"]["+j+"]= "+PHI[k][i][j]);
 //                        PHI[k][i][j]=roundValue(PHI[k][i][j], NO_OF_DECIMAL);
                         V_TB=-M*((Ut1[k][i+1][j]-Ut1[k][i][j])
                             +(Vt1[k][i][j+1]-Vt1[k][i][j])
@@ -405,11 +408,11 @@ public class WeatherPredict {
             }
             bw= new BufferedWriter(new FileWriter(file));
             for (int k = 0; k < array.length; k++) {
-                bw.write("k= "+(k+1));
+                bw.write("k= "+(k));
                 bw.newLine();
                 for (int i = 0; i < array[1].length; i++) {
                     for (int j = 0; j < array[0][1].length; j++) {
-                        bw.write((i+1)+"\t"+(j+1)+"\t"+array[k][i][j]);
+                        bw.write(i+"\t"+(j)+"\t"+array[k][i][j]);
                         bw.newLine();
 //                        bw.write(array[k][i][j]+" ");                        
                     }
@@ -432,7 +435,7 @@ public class WeatherPredict {
             for (int i = 0; i < array.length; i++) {
                 for (int j = 0; j < array[1].length; j++) {                    
 //                        bw.write(array[i][j]+" ");                                            
-                    bw.write((i+1)+"\t"+(j+1)+"\t"+array[i][j]);
+                    bw.write((i)+"\t"+(j)+"\t"+array[i][j]);
                     bw.newLine();
                 }                
             }
