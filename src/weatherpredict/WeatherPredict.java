@@ -31,12 +31,13 @@ public class WeatherPredict {
     private static final float M=1;
     
     private static final float[] PN= {1000, 900, 650, 400, 150};
-    private static final int P0=1000;
+    private static final float P0=1000;
     private static final float det=1200;
     private static final float dex=100000;
     private static final float F=(float) (14.584*Math.pow(10, -5));    
     private static final int NO_OF_DECIMAL=4;
-    
+    private static final float P25=125;
+    static float[] PP1, PP2, PP3, RTV, RW, PW, PW2= new float[K];
     static float[][][] Ut= new float[K][X][Y];
     static float[][][] Ut1= new float[K][X][Y];
     static float[][][] Ut2= new float[K][X][Y];
@@ -308,70 +309,82 @@ public class WeatherPredict {
         }
     }
     
-    public static void ChuanDoan(){
-        for(int k=0; k<K; k++){
-            float PA3= PN[k+1]-P3;
-            float PA2= PN[k]-PN[k+1];
-            float PA1=PN[k]-P3;  
+    public static void ChuanDoan(){       
+        for(int k=0; k<K-1; k++){  
+            if(k==0){
             for (int i=1; i<X-1; i++){
-                for(int j=1; j<Y-1; j++){
+                for(int j=1; j<Y-1; j++){                                        
+                    float PA3= PN[k+1]-P3;
+                    float PA2= PN[k]-PN[k+1];
+                    float PA1=PN[k]-P3;
+                    P1=(PN[k]-PN[k+1])/2;
+                    P2=(PN[k+1]-PN[k+2])/2;
+                    P3=(PN[k+1]+PN[k+2])/2;                        
+                        //**
                     R0= (float) (TE_t1[k][i][j]*Math.pow(PN[k]/P0, RC));
                     Ro= PN[k]/(R*R0);
                     TV=(float) (TE_t1[k][i][j]*(1+0.61*Q_t1[k][i][j]));
-                    if(k==0){
-                        P1=(PN[k]-PN[k+1])/2;
-                        P2=(PN[k+1]-PN[k+2])/2;
-                        P3=(PN[k+1]+PN[k+2])/2;                        
-                            //**
-                        V_TB=-M*(((Ut1[k][i+1][j]-Ut1[k][i][j])
-                            +(Vt1[k][i][j+1]-Vt1[k][i][j]))*P2     
-                            +((Ut1[k+1][i+1][j]-Ut1[k+1][i][j])
-                            +(Vt1[k+1][i][j+1]-Vt1[k+1][i][j]))*P1)/(dex*(P1+P2));          
+                    V_TB=-M*(((Ut1[k][i+1][j]-Ut1[k][i][j])
+                        +(Vt1[k][i][j+1]-Vt1[k][i][j]))*P2     
+                        +((Ut1[k+1][i+1][j]-Ut1[k+1][i][j])
+                        +(Vt1[k+1][i][j+1]-Vt1[k+1][i][j]))*P1)/(dex*(P1+P2));          
 //                        V_TB=roundValue(V_TB, NO_OF_DECIMAL);                                              
-                        //**1
-                        Wt[k][i][j]=(-V_TB*PA1+(Ws[i][j]*PA3/PA2-Wt[k+1][i][j]*PA2/PA3))/(PA3/PA2-PA2/PA3);
+                    //**1 
+                    Wt[k][i][j]=(-V_TB*PA1+(Ws[i][j]*PA3/PA2-Wt[k+1][i][j]*PA2/PA3))/(PA3/PA2-PA2/PA3);
 //                        Wt[k][i][j]=roundValue(Wt[k][i][j], NO_OF_DECIMAL);
-                        //**2
-                        PHI[k][i][j]=(float) (PHI[k+1][i][j]+R/Ro*TV*Math.pow((PN[k]/P0), RC)*(-PA2));
-                        System.err.println("PHI["+k+"]["+i+"]["+j+"]= "+PHI[k][i][j]);
+                    //**2
+                    PHI[k][i][j]=(float) (PHI[k+1][i][j]+R/Ro*TV*Math.pow((PN[k]/P0), RC)*(-PA2));
+                    System.err.println("PHI["+k+"]["+i+"]["+j+"]= "+PHI[k][i][j]);
 //                        PHI[k][i][j]=roundValue(PHI[k][i][j], NO_OF_DECIMAL);
-                    } else if (k==K-1){
-                        float PA0= PN[k]-PN[k-1];
-                        //***1
-                        PHI[k][i][j]=(float) (PHI[k-1][i][j]+R/Ro*TV*Math.pow(PN[k]/P0, RC)*PA0);
-                        System.err.println("PHI["+k+"]["+i+"]["+j+"]= "+PHI[k][i][j]);
-//                        PHI[k][i][j]=roundValue(PHI[k][i][j], NO_OF_DECIMAL);
-                        Wt[k][i][j]=0;
-                    }else{
-                        float PP1= PN[k-1]-PN[k+1];
-                        float PP2= PN[k-1]-PN[k];
-                        float PP3= PN[k]-PN[k+1];
-                        PHI[k][i][j]=(float) (((R/Ro*TV*Math.pow(PN[k]/P0, RC)*PP1+PHI[k-1][i][j]*PP3/PP2
-                                -PHI[k+1][i][j]*PP2/PP3))/(PP3/PP2-PP2/PP3));
-                        System.err.println("PHI["+k+"]["+i+"]["+j+"]= "+PHI[k][i][j]);
-//                        PHI[k][i][j]=roundValue(PHI[k][i][j], NO_OF_DECIMAL);
-                        V_TB=-M*((Ut1[k][i+1][j]-Ut1[k][i][j])
-                            +(Vt1[k][i][j+1]-Vt1[k][i][j])
-                            +(Ut1[k+1][i+1][j]-Ut1[k+1][i][j])
-                            +(Vt1[k+1][i][j+1]-Vt1[k+1][i][j]))/(2*dex);
-//                        V_TB=roundValue(V_TB, NO_OF_DECIMAL);
-                        Wt[k][i][j]=(-V_TB*PP1+Wt[k-1][i][j]*PP3/PP2-Wt[k+1][i][j]*PP2/PP1)
-                            /(PP3/PP2- PP2/PP3);
-//                        Wt[k][i][j]=roundValue(Wt[k][i][j], NO_OF_DECIMAL);
                     }
                 }
+            }else{               
+                PP1[k]=PN[k-1]-PN[k+1];                
+                PP2[k]=PN[k-1]-PN[k];
+                PP3[k]=PN[k]-PN[k+1];
+                PW[k]=(PN[k-1]-PN[k+1])/2;                
+                if(k==K-2)
+                    PW2[k]=(PN[k]-PN[K-1])/2 +P25;
+                else
+                    PW2[k]=(PN[k]-PN[k+2])/2;
             }
         }
-        P4=(PN[1]+PN[2])/2;
+        
         for (int i = 1; i < X-1; i++) {
             for (int j = 1; j < Y-1; j++) {
-                float VTS= M*((Ut1[1][i+1][j]-Ut1[1][i][j])+(Vt1[1][i][j+1]-Vt1[1][i][j]))/dex;
-//                VTS=roundValue(VTS, NO_OF_DECIMAL);
-                Ws[i][j]=Wt[1][i][j]+VTS*(P4- PN[1]);
-//                Ws[i][j]=roundValue(Ws[i][j], NO_OF_DECIMAL);
+                for (int k = 1; k < K; k++) {
+                    if (k==K-1){
+                        PP1[k]=PN[k]-PN[k-1];
+                    }                    
+                    R0=(float) (TE_t[k][i][j]*Math.pow(PN[k]/P0, RC));
+                    Ro=PN[k]/(R*R0);
+                    TV=(float) (TE_t1[k][i][j]*(1+0.61*Q_t1[k][i][j]));
+                    RTV[k]=(float) ((R/Ro)*TV*Math.pow(PN[k]/P0, RC)*PP1[k]);                    
+                }
+                float RR= RTV[3]-RTV[4]*(PP2[3]/PP3[3]);
+                float P43= (PP3[3]/PP2[3])*(PP3[3]/PP2[3])*(PP2[2]/PP3[2]);
+                float RRT= RTV[2]-RR*PP3[3]/PP2[3]*PP2[2]/PP3[2];
+                float RDH= RTV[1]+PHI[i][j][0]*PP3[1]/PP2[1];
+                PHI[i][j][1]=-(RRT-P43*RDH)/(PP3[2]/PP2[2]+P43*(PP3[1]/PP2[1]-PP2[1]/PP3[1]));
+                PHI[i][j][2]=(RRT+PHI[i][j][1]*PP3[3]/PP2[3])/P43;
+                PHI[i][j][3]=(PHI[i][j][2]*PP3[3]/PP2[3]+RR)/P43;
+                PHI[i][j][4]=PHI[i][j][3]+RTV[4];
+                
+                float P3W= ((PW2[3]/PW[3])*(PW[2]/PW2[2]))/(PW[3]/PW2[3]-PW2[3]/PW[3])+(PW[2]/PW2[2]-PW2[2]/PW[2]);
+                float R3W= RW[2]*(PW[2]+PW2[2])+PW[2]/PW2[2]*(RW[3]*(PW[3]+PW2[3])/(PW[3]/PW2[3]-PW2[3]/PW[3]));
+                float R2W= RW[1]*(PW[1]+PW2[1])-Wt[i][j][0]*PW2[1]/PW[1];
+                float P23W=PW2[2]/PW[2]+P3W*(PW2[1]/PW[1])*(PW[1]/PW2[1]-PW2[1]/PW[1]);
+                float R23W= R3W+R2W*P3W*PW2[1]/PW[1];
+                Wt[i][j][1]=R23W/P23W;
+                Wt[i][j][2]=(Wt[i][j][1]*(PW[1]/PW2[1]-PW2[1]/PW[1])-R2W)*PW2[1]/PW[1];
+                Wt[i][j][3]=(RW[3]*(PW[3]+PW2[3]-Wt[i][j][2])*PW2[3]/PW[3])/(PW[3]/PW2[3]-PW2[3]/PW[3]);
+                Wt[i][j][4]=0;
             }
         }
-    }
+        
+    }            
+        
+        
     public static void printResult(){   
         System.err.println("U=");
         print3D(K, X, Y, Ut2);
