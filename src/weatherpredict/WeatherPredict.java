@@ -30,7 +30,7 @@ public class WeatherPredict {
     private static final float CP=1005;
     private static final float M=1;
     
-    private static final float[] PN= {1000, 900, 650, 500, 150};
+    private static final float[] PN= {1000, 900, 650, 400, 150};
     private static final float P0=1000;
     private static final float det=1200;
     private static final float dex=100000;
@@ -79,7 +79,7 @@ public class WeatherPredict {
     static float det1;
     static Scanner scanner;   
     
-    static String dataPath="C:\\Users\\v11424\\Desktop\\weatherpredict_result\\";
+    static String dataPath="C:\\Users\\ngo\\Desktop\\weatherpredict_result\\";
     public static void main(String[] args) throws InterruptedException {
         // TODO code application logic here
        
@@ -93,10 +93,8 @@ public class WeatherPredict {
                 det1=det;
             }
             DuDoan();
-//            System.out.println("Ket thuc viec du bao");            
             //giai doan chuan doan
             ChuanDoan();
-//            System.out.println("Ket thuc viec chuan doan");
             System.out.println("Ket thuc tinh toan cho buoc thoi gian "+(n+1));
             saveResult(n);
        }
@@ -117,20 +115,15 @@ public class WeatherPredict {
             PW[k]=0;
             PW2[k]=0;
             sgoc=(float) Math.sin(Goc[k]);
-//            roundValue(sgoc, NO_OF_DECIMAL);
             cgoc=(float) Math.cos(Goc[k]);
-//            roundValue(cgoc, NO_OF_DECIMAL);
             Tt= 273+t[k];
             if(k==(K-1)) Ptb=25;
             else Ptb=(PN[k]+PN[k+1])/2;
             for (int i = 0; i < X; i++) {
                 for (int j = 0; j < Y; j++) {
                     Ut[k][i][j]= Gio[k]*cgoc;
-//                    Ut[k][i][j]=roundValue(Ut[k][i][j], NO_OF_DECIMAL);
                     Vt[k][i][j]= Gio[k]*sgoc;
-//                    Vt[k][i][j]=roundValue(Vt[k][i][j], NO_OF_DECIMAL);
                     TE_t[k][i][j]= (float) (Tt*Math.pow(1000/Ptb, 0.286));
-//                    TE_t[k][i][j]=roundValue(TE_t[k][i][j], NO_OF_DECIMAL);
                     Q_t[k][i][j]= 0;
                     PHI[k][i][j]=Zcao[k];
                     Wt[k][i][j]=0;
@@ -156,14 +149,6 @@ public class WeatherPredict {
         saveFile3D("init\\Wt.txt", Wt);
         saveFile2D("init\\Ws.txt", Ws);
         saveFile2D("init\\PS.txt", PS);
-//        print3D(K, X, Y, Ut1);
-//        print3D(K, X, Y, Vt1);
-//        print3D(K, X, Y, TE_t1);
-//        print3D(K, X, Y, Q_t1);
-//        print3D(K, X, Y, PHI);
-//        print3D(K, X, Y, Wt);
-//        print2D(X, Y, Ws);
-//        print2D(X, Y, PS);
         System.out.println("Khoi tao thanh cong");
         
     }
@@ -181,90 +166,62 @@ public class WeatherPredict {
                         -M1*((Ut1[k][i][j]+Ut1[k][i+1][j])*(Ut1[k][i+1][j]-Ut1[k][i][j])+(Ut1[k][i][j]+Ut1[k][i-1][j])*(Ut1[k][i][j]-Ut1[k][i-1][j]))
                         +F*(Vt1[k][i][j]+Vt1[k][i+1][j]+Vt1[k][i+1][j-1]+Vt1[k][i][j-1])/4
                         -M1*((Vt1[k][i][j]+Vt1[k][i+1][j])*(Ut1[k][i][j+1]-Ut1[k][i][j])+(Vt1[k][i][j-1]+Vt1[k][i+1][j-1])*(Ut1[k][i][j-1]-Ut1[k][i][j]));  
-//                    Ut2[k][i][j]=roundValue(Ut2[k][i][j], NO_OF_DECIMAL);
                     //2.2
                     Vt2[k][i][j]= -M*(PHI[k][i][j+1]-PHI[k][i][j])/dex
                         - M1*((Ut1[k][i][j]+Ut1[k][i][j+1])*(Vt1[k][i+1][j]-Vt1[k][i][j])+(Ut1[k][i-1][j]+Ut1[k][i-1][j+1])*(Vt1[k][i][j]-Vt1[k][i-1][j]))
                         - M1*((Vt1[k][i][j]+Vt1[k][i][j+1])*(Vt1[k][i][j+1]-Vt1[k][i][j])+(Vt1[k][i][j]+Vt1[k][i][j-1])*(Vt1[k][i][j]-Vt1[k][i][j-1]))
                         -F*(Ut1[k][i][j]+Ut1[k][i][j+1]+Ut1[k][i-1][j+1]+Ut1[k][i-1][j])/4;      
-//                    Vt2[k][i][j]=roundValue(Vt2[k][i][j], NO_OF_DECIMAL);
                     if(k==K-1){
                         //***
                         P1= (PN[k]+PN[k-1])/2;
-//                        P1=roundValue(P1, NO_OF_DECIMAL);
                         P2=25;  
                         P5=(PN[k]-P2)/(2*(P1-P2));
-//                        P5=roundValue(P5, NO_OF_DECIMAL);
                         //***1
                         Ut2[k][i][j]= Ut2[k][i][j]
                                 -((Wt[k-1][i+1][j]+Wt[k-1][i][j])*P5*(Ut1[k][i][j]-Ut1[k-1][i][j]))/(PN[k]-PN[k-1]);
-//                        Ut2[k][i][j]= roundValue(Ut2[k][i][j], NO_OF_DECIMAL);
                         //***2
                         Vt2[k][i][j]= Vt2[k][i][j]
                                 -((Wt[k-1][i][j+1]+Wt[k-1][i][j])*P5*(Vt1[k][i][j]-Vt1[k-1][i][j]))/(PN[k]-PN[k-1]);
-//                        Vt2[k][i][j]= roundValue(Vt2[k][i][j], NO_OF_DECIMAL);
                         //***3
                         TE_t2[k][i][j]=0;
                         Q_t2[k][i][j]=0;
                     } else{
                         U1= (Ut1[k][i+1][j]+Ut1[k+1][i+1][j])/2;
-//                        U1=roundValue(U1, NO_OF_DECIMAL);
                         U2= (Ut1[k][i][j]+Ut1[k+1][i][j])/2;
-//                        U2=roundValue(U2, NO_OF_DECIMAL);
                         V1= (Vt1[k][i][j+1]+Vt1[k+1][i][j+1])/2;
-//                        V1=roundValue(V1, NO_OF_DECIMAL);
                         V2=(Vt1[k][i][j]+Vt1[k+1][i][j])/2;
-//                        V2=roundValue(V2, NO_OF_DECIMAL);
                         //2.3
                         TE_t2[k][i][j]=-2*M1*(U1*(TE_t1[k][i+1][j]-TE_t1[k][i][j])
                                 -U2*(TE_t1[k][i][j]-TE_t1[k][i-1][j])
                                 +V1*(TE_t1[k][i][j+1]-TE_t1[k][i][j])
                                 -V2*(TE_t1[k][i][j]-TE_t1[k][i][j-1]));
-//                        TE_t2[k][i][j]=roundValue(TE_t2[k][i][j], NO_OF_DECIMAL);
                         //2.4
                         Q_t2[k][i][j]=-2*M1*(U1*(Q_t1[k][i+1][j]-Q_t1[k][i][j])
                                 -U2*(Q_t1[k][i][j]-Q_t1[k][i-1][j])
                                 +V1*(Q_t1[k][i][j+1]-Q_t1[k][i][j])
                                 -V2*(Q_t1[k][i][j]-Q_t1[k][i][j-1]));
-//                        Q_t2[k][i][j]=roundValue(Q_t2[k][i][j], NO_OF_DECIMAL);
                         if(k==0){
                         P1= (PN[k+1]+PN[k])/2;
-//                        P1=roundValue(P1, NO_OF_DECIMAL);
                         P2= (PN[k+2]+PN[k+1])/2;    
-//                        P2=roundValue(P2, NO_OF_DECIMAL);
                         W9= (Wt[k+1][i][j]*P1+Wt[k][i][j]*P2)/(P1+P2);
-//                        W9=roundValue(W9, NO_OF_DECIMAL);
                         W1= ((Wt[k][i+1][j]+Wt[k][i][j])+(Ws[i][j]+Ws[i+1][j]))/4;
-//                        W1=roundValue(W1, NO_OF_DECIMAL);
                         W2=((Wt[k][i][j+1]+Wt[k][i][j])+(Ws[i][j+1]+Ws[i][j]))/4;
-//                        W2=roundValue(W2, NO_OF_DECIMAL);
                         //**1
                         Ut2[k][i][j]=Ut2[k][i][j]-W1*(Ut1[k+1][i][j]-Ut1[k][i][j])/(PN[k+1]-PN[k]);
-//                        Ut2[k][i][j]=roundValue(Ut2[k][i][j], NO_OF_DECIMAL);
-//                        System.err.println("Ut2["+k+"]["+i+"]["+j+"]= "+Ut2[k][i][j]);
                         //**2
                         Vt2[k][i][j]=Vt2[k][i][j]-W2*(Vt1[k+1][i][j]-Vt1[k][i][j])/(PN[k+1]-PN[k]);
-//                        System.err.println("Vt2["+k+"]["+i+"]["+j+"]= "+Vt2[k][i][j]);
-//                        Vt2[k][i][j]=roundValue(Vt2[k][i][j], NO_OF_DECIMAL);
                         //**3
                         TE_t2[k][i][j]=TE_t2[k][i][j]-Wt[k][i][j]*(TE_t1[k+1][i][j]-TE_t1[k][i][j])/(PN[k+1]-PN[k]);
-//                        System.err.println("TE_t2["+k+"]["+i+"]["+j+"]= "+TE_t2[k][i][j]);
-//                        TE_t2[k][i][j]=roundValue(TE_t2[k][i][j], NO_OF_DECIMAL);
                         //**4
                         Q_t2[k][i][j]= Q_t2[k][i][j]-Wt[k][i][j]*(Q_t1[k+1][i][j]-Q_t1[k][i][j])/(PN[k+1]-PN[k]);
-//                        System.err.println("Q_t2["+k+"]["+i+"]["+j+"]= "+Q_t2[k][i][j]);
-//                        Q_t2[k][i][j]= roundValue(Q_t2[k][i][j], NO_OF_DECIMAL);
                         //**5
                         PS_t2[i][j]=-2*M1*(Ut1[k][i][j]*(PS_t1[i+1][j]-PS_t1[i][j])
                                 -Ut1[k][i-1][j]*(PS_t1[i][j]-PS_t1[i-1][j])
                                 +Vt1[k][i][j+1]*(PS_t1[i][j+1]-PS_t1[i][j])
                                 -Vt1[k][i][j-1]*(PS_t1[i][j]-PS_t1[i][j-1]));
-//                        PS_t2[i][j]=roundValue(PS_t2[i][j], NO_OF_DECIMAL);
                         PS_t2[i][j]=PS_t2[i][j]+W9-(((Ut1[k+1][i][j]-Ut1[k+1][i-1][j])
                                 +(Vt1[k+1][i][j-1]-Vt1[k+1][i][j])+(Ut1[k][i-1][j]-Ut1[k][i][j])
                                 +(Vt1[k][i][j-1]-Vt1[k][i][j]))*2*M1)*(PS_t1[i][j]-900);
-//                        PS_t2[i][j]=roundValue(PS_t2[i][j], NO_OF_DECIMAL);
-//                       System.err.println("PS_t2["+i+"]["+j+"]= "+PS_t2[i][j]);
                         } else{                    
                         P1= (PN[k-1]+PN[k])/2;
                         P2= (PN[k]+PN[k+1])/2;
@@ -273,21 +230,17 @@ public class WeatherPredict {
                                 +(Wt[k+1][i+1][j]+Wt[k+1][i][j])*(P1-PN[k])/(2*(P1-P2))
                                 *(Ut1[k-1][i][j]-Ut1[k][i][j])*(PN[k]-PN[k+1])/(PN[k-1]-PN[k])
                                 +(Ut1[k][i][j]-Ut1[k+1][i][j])*(PN[k-1]-PN[k])/(PN[k]-PN[k+1]))/(PN[k-1]-PN[k+1]);
-//                        Ut2[k][i][j]= roundValue(Ut2[k][i][j], NO_OF_DECIMAL);
                         //2.6
                         Vt2[k][i][j]= Vt2[k][i][j]-((Wt[k][i][j+1]+Wt[k][i][j])*(PN[k]-P2)
                                 +(Wt[k+1][i][j+1]+Wt[k+1][i][j])*(P1-PN[k])/(2*(P1-P2))
                                 *(Vt1[k-1][i][j]-Vt1[k][i][j])*(PN[k]-PN[k+1])/(PN[k-1]-PN[k])
                                 +(Vt1[k][i][j]-Vt1[k+1][i][j])*(PN[k-1]-PN[k])/(PN[k]-PN[k+1]))/(PN[k-1]-PN[k+1]);
-//                        Vt2[k][i][j]= roundValue(Vt2[k][i][j], NO_OF_DECIMAL);
                         //2.7
                         TE_t2[k][i][j]=TE_t2[k][i][j]-Wt[k][i][j]*((TE_t1[k-1][i][j]-TE_t1[k][i][j])*(PN[k]-PN[k+1])/(PN[k-1]-PN[k])
                                 +(TE_t1[k][i][j]-TE_t[k+1][i][j])*(PN[k+1]-PN[k])/(PN[k]-PN[k+1]))/(PN[k-1]-PN[k+1]);
-//                        TE_t2[k][i][j]=roundValue(TE_t2[k][i][j], NO_OF_DECIMAL);
                         //2.8
                         Q_t2[k][i][j]= Q_t2[k][i][j]-Wt[k][i][j]*((Q_t1[k-1][i][j]-Q_t1[k][i][j])*(PN[k]-PN[k+1])/(PN[k-1]-PN[k])
                                 +(Q_t1[k][i][j]-Q_t1[k+1][i][j])*(PN[k-1]-PN[k])/(PN[k]-PN[k+1]))/(PN[k-1]-PN[k+1]);
-//                        Q_t2[k][i][j]=roundValue(Q_t2[k][i][j], NO_OF_DECIMAL);
                         }
                     }                                                                                          
                 }
@@ -298,13 +251,9 @@ public class WeatherPredict {
             for (int i = 1; i < X-1; i++) {
                 for (int j = 1; j < Y-1; j++) {
                     Ut2[k][i][j]= Ut[k][i][j]+det1*Ut2[k][i][j];
-//                    Ut2[k][i][j]=roundValue(Ut2[k][i][j], NO_OF_DECIMAL);
                     Vt2[k][i][j]= Vt[k][i][j]+det1*Vt2[k][i][j];
-//                    Vt2[k][i][j]= roundValue(Vt2[k][i][j], NO_OF_DECIMAL);
                     TE_t2[k][i][j]= TE_t[k][i][j]+det1*TE_t2[k][i][j];
-//                    TE_t2[k][i][j]=roundValue(TE_t2[k][i][j], NO_OF_DECIMAL);
                     Q_t2[k][i][j]= Q_t[k][i][j]+det1*Q_t2[k][i][j];                        
-//                    Q_t2[k][i][j]=roundValue(Q_t2[k][i][j], NO_OF_DECIMAL);
                     Ut[k][i][j]=Ut1[k][i][j]; Ut1[k][i][j]=Ut2[k][i][j];
                     Vt[k][i][j]=Vt1[k][i][j]; Vt1[k][i][j]=Vt2[k][i][j];
                     TE_t[k][i][j]=TE_t1[k][i][j]; TE_t1[k][i][j]=TE_t2[k][i][j];
@@ -315,7 +264,6 @@ public class WeatherPredict {
         for (int i = 1; i < X-1; i++) {
             for (int j = 1; j < Y-1; j++) {
                 PS_t2[i][j]= PS[i][j]+det1*PS_t2[i][j];
-//                PS_t2[i][j]=roundValue(PS_t2[i][j], NO_OF_DECIMAL);
                 PS[i][j]=PS_t1[i][j];
                 PS_t1[i][j]=PS_t2[i][j];
             }                
@@ -334,21 +282,17 @@ public class WeatherPredict {
                 for (int i=1; i<X-1; i++){
                     for(int j=1; j<Y-1; j++){                                                            
                             //**
-                        R0= (float) (TE_t1[k][i][j]*Math.pow(PN[k]/P0, RC));
-                        Ro= PN[k]/(R*R0);
+//                        R0= (float) (TE_t1[k][i][j]*Math.pow(PN[k]/P0, RC));
+//                        Ro= PN[k]/(R*R0);
                         TV=(float) (TE_t1[k][i][j]*(1+0.61*Q_t1[k][i][j]));
                         V_TB=-M*(((Ut1[k][i+1][j]-Ut1[k][i][j])
                             +(Vt1[k][i][j+1]-Vt1[k][i][j]))*P2     
                             +((Ut1[k+1][i+1][j]-Ut1[k+1][i][j])
-                            +(Vt1[k+1][i][j+1]-Vt1[k+1][i][j]))*P1)/(dex*(P1+P2));          
-    //                        V_TB=roundValue(V_TB, NO_OF_DECIMAL);                                              
+                            +(Vt1[k+1][i][j+1]-Vt1[k+1][i][j]))*P1)/(dex*(P1+P2));                    
                         //**1 
-                        Wt[k][i][j]=(-V_TB*PA1+(Ws[i][j]*PA3/PA2-Wt[k+1][i][j]*PA2/PA3))/(PA3/PA2-PA2/PA3);
-    //                        Wt[k][i][j]=roundValue(Wt[k][i][j], NO_OF_DECIMAL);
+                        Wt[k][i][j]=(-V_TB*PA1+(Ws[i][j]*PA3/PA2-Wt[k+1][i][j]*PA2/PA3))/(PA3/PA2-PA2/PA3);    
                         //**2
-                        PHI[k][i][j]=(float) (PHI[k+1][i][j]+R/Ro*TV*Math.pow((PN[k]/P0), RC)*(-PA2));
-//                        System.err.println("PHI["+k+"]["+i+"]["+j+"]= "+PHI[k][i][j]);
-    //                        PHI[k][i][j]=roundValue(PHI[k][i][j], NO_OF_DECIMAL);                    
+                        PHI[k][i][j]=(float) (PHI[k+1][i][j]+R/PN[k]*TV*Math.pow((PN[k]/P0), RC)*(-PA2));
                     }
                 }                
             }
@@ -356,18 +300,20 @@ public class WeatherPredict {
                 PP1[k]=PN[k-1]-PN[k+1];                   
                 PP2[k]=PN[k-1]-PN[k];
                 PP3[k]=PN[k]-PN[k+1];
-                PW[k]=(PN[k-1]-PN[k+1])/2;                
-                if(k==K-2)
-                    PW2[k]=(PN[k]-PN[K-1])/2 +P25;
-                else
-                    PW2[k]=(PN[k]-PN[k+2])/2;
+                PW[k]=(PN[k-1]-PN[k+1])/2;  
+                if(k==K-2){
+                    PW2[k]=(PN[k]-PN[K-1])/2+P25;                    
+                }
+                else{
+                    PW2[k]=(PN[k]-PN[k+2])/2;                    
+                }
             }
         }        
         for (int i = 1; i < X-1; i++) {
             for (int j = 1; j < Y-1; j++) {
                 for (int k = 1; k < K; k++) {
-                    R0=(float) (TE_t[k][i][j]*Math.pow(PN[k]/P0, RC));
-                    Ro=PN[k]/(R*R0);
+//                    R0=(float) (TE_t[k][i][j]*Math.pow(PN[k]/P0, RC));
+//                    Ro=PN[k]/(R*R0);
                     TV=(float) (TE_t1[k][i][j]*(1+0.61*Q_t1[k][i][j]));
                     if (k==K-1){
                         PP1[k]=PN[k]-PN[k-1];
@@ -378,7 +324,7 @@ public class WeatherPredict {
                             +(Vt1[k+1][i][j+1]-Vt1[k+1][i][j]))*P1)/(dex*2); 
                         RW[k]=-V_TB;
                     }                                        
-                    RTV[k]=(float) ((R/Ro)*TV*Math.pow(PN[k]/P0, RC)*PP1[k]);                    
+                    RTV[k]=(float) ((R/PN[k])*TV*Math.pow(PN[k]/P0, RC)*PP1[k]);                    
                 }
                 float RR= RTV[3]-RTV[4]*(PP2[3]/PP3[3]);
                 float P43= (PP3[3]/PP2[3])*(PP3[3]/PP2[3])*(PP2[2]/PP3[2]);
@@ -388,7 +334,13 @@ public class WeatherPredict {
                 PHI[2][i][j]=(RRT+PHI[1][i][j]*PP3[3]/PP2[3])/P43;
                 PHI[3][i][j]=(PHI[2][i][j]*PP3[3]/PP2[3]+RR)/P43;
                 PHI[4][i][j]=PHI[3][i][j]+RTV[4];
-                
+                if ((PW[3]/PW2[3]-PW2[3]/PW[3])==0){
+                    float R24W= RW[1]*(PW[1]+PW2[1])+PW[1]/PW2[1]*(RW[3]*(PW[3]+PW2[3]))*PW[3]/PW2[3];
+                    Wt[1][i][j]= (R24W-Wt[0][i][j]*PW2[1]/PW[1])/(PW[1]/PW2[1]-PW2[1]/PW[1]);
+                    Wt[2][i][j]= RW[3]*(PW[3]+PW2[3])*PW[3]/PW2[3];
+                    Wt[3][i][j]= Wt[1][i][j]*PW2[2]/PW[2]-RW[2]*(PW[2]+PW2[2])*PW2[2]/PW[2];
+                    Wt[4][i][j]=5;
+                }else{
                 float P3W= ((PW2[3]/PW[3])*(PW[2]/PW2[2]))/(PW[3]/PW2[3]-PW2[3]/PW[3])+(PW[2]/PW2[2]-PW2[2]/PW[2]);
                 float R3W= RW[2]*(PW[2]+PW2[2])+PW[2]/PW2[2]*(RW[3]*(PW[3]+PW2[3])/(PW[3]/PW2[3]-PW2[3]/PW[3]));
                 float R2W= RW[1]*(PW[1]+PW2[1])-Wt[0][i][j]*PW2[1]/PW[1];
@@ -398,6 +350,7 @@ public class WeatherPredict {
                 Wt[2][i][j]=(Wt[1][i][j]*(PW[1]/PW2[1]-PW2[1]/PW[1])-R2W)*PW2[1]/PW[1];
                 Wt[3][i][j]=(RW[3]*(PW[3]+PW2[3]-Wt[2][i][j])*PW2[3]/PW[3])/(PW[3]/PW2[3]-PW2[3]/PW[3]);
                 Wt[4][i][j]=0;
+                }
             }
         }
         
