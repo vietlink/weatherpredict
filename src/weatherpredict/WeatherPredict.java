@@ -22,10 +22,10 @@ public class WeatherPredict {
     /**
      * @param args the command line arguments
      */
-    private static final int X=10;
-    private static final int Y=10;
+    private static final int X=5;
+    private static final int Y=5;
     private static final int K=5;
-    private static final int N=50;
+    private static final int N=10;
     private static final float R=287;
     private static final float CP=1005;
     private static final float M=1;
@@ -202,7 +202,9 @@ public class WeatherPredict {
                                 -V2*(Q_t1[k][i][j]-Q_t1[k][i][j-1]));
                         if(k==0){
                         P1= (PN[k+1]+PN[k])/2;
+                        P1=P1-PN[k+1];
                         P2= (PN[k+2]+PN[k+1])/2;
+                        P2=PN[k+1]-P2;
                         W9= (Wt[k+1][i][j]*P1+Wt[k][i][j]*P2)/(P1+P2);
                         W1= ((Wt[k][i+1][j]+Wt[k][i][j])+(Ws[i][j]+Ws[i+1][j]))/4;
                         W2=((Wt[k][i][j+1]+Wt[k][i][j])+(Ws[i][j+1]+Ws[i][j]))/4;
@@ -226,18 +228,18 @@ public class WeatherPredict {
                         P1= (PN[k-1]+PN[k])/2;
                         P2= (PN[k]+PN[k+1])/2;
                         //2.5
-                        Ut2[k][i][j]= Ut2[k][i][j]-((Wt[k][i+1][j]+Wt[k][i][j])*(PN[k]-P2)
-                                +(Wt[k+1][i+1][j]+Wt[k+1][i][j])*(P1-PN[k])/(2*(P1-P2))
-                                *(Ut1[k-1][i][j]-Ut1[k][i][j])*(PN[k]-PN[k+1])/(PN[k-1]-PN[k])
-                                +(Ut1[k][i][j]-Ut1[k+1][i][j])*(PN[k-1]-PN[k])/(PN[k]-PN[k+1]))/(PN[k-1]-PN[k+1]);
+                        Ut2[k][i][j]= Ut2[k][i][j]-((((Wt[k][i+1][j]+Wt[k][i][j])*(PN[k]-P2)
+                                +(Wt[k+1][i+1][j]+Wt[k+1][i][j])*(P1-PN[k])/(2*(P1-P2))))
+                                *(((Ut1[k-1][i][j]-Ut1[k][i][j])*(PN[k]-PN[k+1])/(PN[k-1]-PN[k])
+                                +(Ut1[k][i][j]-Ut1[k+1][i][j])*(PN[k-1]-PN[k])/(PN[k]-PN[k+1]))))/(PN[k-1]-PN[k+1]);
                         //2.6
-                        Vt2[k][i][j]= Vt2[k][i][j]-((Wt[k][i][j+1]+Wt[k][i][j])*(PN[k]-P2)
-                                +(Wt[k+1][i][j+1]+Wt[k+1][i][j])*(P1-PN[k])/(2*(P1-P2))
-                                *(Vt1[k-1][i][j]-Vt1[k][i][j])*(PN[k]-PN[k+1])/(PN[k-1]-PN[k])
-                                +(Vt1[k][i][j]-Vt1[k+1][i][j])*(PN[k-1]-PN[k])/(PN[k]-PN[k+1]))/(PN[k-1]-PN[k+1]);
+                        Vt2[k][i][j]= Vt2[k][i][j]-(((Wt[k][i][j+1]+Wt[k][i][j])*(PN[k]-P2)
+                                +(Wt[k+1][i][j+1]+Wt[k+1][i][j])*(P1-PN[k])/(2*(P1-P2)))
+                                *((Vt1[k-1][i][j]-Vt1[k][i][j])*(PN[k]-PN[k+1])/(PN[k-1]-PN[k])
+                                +(Vt1[k][i][j]-Vt1[k+1][i][j])*(PN[k-1]-PN[k])/(PN[k]-PN[k+1])))/(PN[k-1]-PN[k+1]);
                         //2.7
                         TE_t2[k][i][j]=TE_t2[k][i][j]-Wt[k][i][j]*((TE_t1[k-1][i][j]-TE_t1[k][i][j])*(PN[k]-PN[k+1])/(PN[k-1]-PN[k])
-                                +(TE_t1[k][i][j]-TE_t[k+1][i][j])*(PN[k+1]-PN[k])/(PN[k]-PN[k+1]))/(PN[k-1]-PN[k+1]);
+                                +(TE_t1[k][i][j]-TE_t[k+1][i][j])*(PN[k-1]-PN[k])/(PN[k]-PN[k+1]))/(PN[k-1]-PN[k+1]);
                         //2.8
                         Q_t2[k][i][j]= Q_t2[k][i][j]-Wt[k][i][j]*((Q_t1[k-1][i][j]-Q_t1[k][i][j])*(PN[k]-PN[k+1])/(PN[k-1]-PN[k])
                                 +(Q_t1[k][i][j]-Q_t1[k+1][i][j])*(PN[k-1]-PN[k])/(PN[k]-PN[k+1]))/(PN[k-1]-PN[k+1]);
